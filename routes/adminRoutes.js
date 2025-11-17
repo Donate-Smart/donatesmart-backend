@@ -6,15 +6,18 @@ import {
   deleteCase,
   getAllUsers,
   getAnalytics,
+  rejectCase
 } from "../controllers/adminController.js";
-import { verifyToken } from "../middleware/authMiddleware.js";
+import { verifyAdmin } from "../middleware/isAdmin.js";
+
 
 const router = express.Router();
 
-router.get("/pending-cases", verifyToken, getPendingCases);
-router.put("/approve-case/:id", verifyToken, approveCase);
-router.delete("/delete-case/:id", verifyToken, deleteCase);
-router.get("/users", verifyToken, getAllUsers);
-router.get("/analytics", verifyToken, getAnalytics);
+router.get("/pending-cases", verifyAdmin, getPendingCases);
+router.put("/approve-case/:id", verifyAdmin, approveCase)
+;router.put("/reject-case/:id", verifyAdmin, rejectCase);
+router.delete("/delete-case/:id", verifyAdmin, deleteCase);
+router.get("/users", verifyAdmin, getAllUsers);
+router.get("/analytics", verifyAdmin, getAnalytics);
 
 export default router;
