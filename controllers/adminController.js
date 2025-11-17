@@ -21,17 +21,36 @@ export const approveCase = async (req, res) => {
     res.status(500).json(err.message);
   }
 };
+// ✅ رفض حالة
+export const rejectCase = async (req, res) => {
+  try {
+    const caseId = req.params.id;
+    const updated = await Case.findByIdAndUpdate(
+      caseId,
+      { status: "rejected" },
+      { new: true }
+    );
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+};
+
 
 // ✅ حذف حالة
 export const deleteCase = async (req, res) => {
   try {
-    const caseId = req.params.id;
+    const caseId = req.params.id;    
+    const existing = await Case.findById(caseId);
+    if (!existing) return res.status(404).json("Case not found");
+
     await Case.findByIdAndDelete(caseId);
     res.json("Case deleted");
   } catch (err) {
     res.status(500).json(err.message);
   }
 };
+
 
 // ✅ عرض جميع المستخدمين
 export const getAllUsers = async (req, res) => {
