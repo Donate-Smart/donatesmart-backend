@@ -28,3 +28,27 @@ export const loginUser = async (req, res) => {
     res.status(500).json(err.message);
   }
 };
+
+export const updateUser = async (req, res) => {
+  const { name, email } = req.body;
+
+  try {
+    const updated = await User.findByIdAndUpdate(
+      req.user.id,
+      { name, email },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json("User not found");
+    }
+
+    res.json({
+      message: "User updated successfully",
+      user: updated,
+    });
+
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+};
