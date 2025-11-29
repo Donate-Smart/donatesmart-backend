@@ -9,6 +9,7 @@ const caseSchema = new mongoose.Schema(
     image: { type: String },
     status: { type: String, default: "pending" },
     donations: { type: Number, default: 0 },
+    goal: { type: Number, default: 0 },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
