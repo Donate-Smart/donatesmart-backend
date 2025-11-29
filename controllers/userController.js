@@ -29,6 +29,16 @@ export const loginUser = async (req, res) => {
   }
 };
 
+export const getUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch user" });
+  }
+}
+
+
 export const updateUser = async (req, res) => {
   const { name, email } = req.body;
 
