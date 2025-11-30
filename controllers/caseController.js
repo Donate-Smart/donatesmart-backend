@@ -3,8 +3,9 @@ import Case from "../models/Case.js";
 
 export const addCase = async (req, res) => {
   try {
-    const { title, description, category, summary } = req.body;
+    const { title, description, category, summary , goal } = req.body;
     console.log("Uploaded file:", req.file);
+    
 
     const image = req.file ? req.file.filename : null;
 
@@ -14,6 +15,7 @@ export const addCase = async (req, res) => {
       category,
       summary,
       image,
+      goal,
       createdBy: req.user.id,
     });
 
