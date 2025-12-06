@@ -15,10 +15,13 @@ import userRoutes from "./routes/userRoutes.js";
 import caseRoutes from "./routes/caseRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import path from "path";
+import contactRoutes from "./routes/contactRoutes.js";
 app.use("/api/auth", userRoutes);
 app.use("/api/cases", caseRoutes);
 app.use("/api/admin", adminRoutes);
 app.use('/uploads', express.static(path.join(path.resolve(), '/uploads')));
+app.use("/api/contact", contactRoutes);
+
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
