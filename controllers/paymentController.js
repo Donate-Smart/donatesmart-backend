@@ -26,11 +26,13 @@ export const checkout  = async (req, res) => {
           quantity: 1,
         },
       ],
-      success_url: `http://localhost:3000//payment-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `http://localhost:3000//payment-cancelled`,
+      success_url: `http://localhost:3000/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `http://localhost:3000/payment-cancelled`,
       metadata: {
         caseId,
+        caseTitle,
         userId,
+        amount
       },
     });
 
@@ -68,4 +70,15 @@ export const webhook = (req, res) => {
   }
 
   res.json({ received: true });
+}
+
+export const getSession = async (req, res) => {
+
+  try {
+    const session = await stripe.checkout.sessions.retrieve(req.params.id);
+    res.json(session);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to retrieve session" });
+  }
 }
