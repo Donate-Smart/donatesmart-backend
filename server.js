@@ -14,10 +14,14 @@ app.use(express.json());
 import userRoutes from "./routes/userRoutes.js";
 import caseRoutes from "./routes/caseRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes";
 import path from "path";
+
+
 app.use("/api/auth", userRoutes);
 app.use("/api/cases", caseRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/payment", paymentRoutes);
 app.use('/uploads', express.static(path.join(path.resolve(), '/uploads')));
 
 // MongoDB connection
