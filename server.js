@@ -14,7 +14,7 @@ app.use(express.json());
 import userRoutes from "./routes/userRoutes.js";
 import caseRoutes from "./routes/caseRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
-import paymentRoutes from "./routes/paymentRoutes";
+import paymentRoutes from "./routes/paymentRoutes.js";
 import path from "path";
 
 
