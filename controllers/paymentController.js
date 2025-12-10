@@ -9,8 +9,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const checkout  = async (req, res) => {
   try {
-    const { amount, caseId, userId } = req.body;
-
+    const { caseId, caseTitle, userId, amount } = req.body;
+    
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
