@@ -2,11 +2,16 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+console.log("Gemini API Key:", process.env.GEMINI_API_KEY);
 
 dotenv.config();
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+}));
 
 app.use(express.json());
 
@@ -17,14 +22,14 @@ import adminRoutes from "./routes/adminRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import path from "path";
 import contactRoutes from "./routes/contactRoutes.js";
+import airoutes from "./routes/airoutes.js";
 app.use("/api/auth", userRoutes);
 app.use("/api/cases", caseRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use('/uploads', express.static(path.join(path.resolve(), '/uploads')));
 app.use("/api/contact", contactRoutes);
-
-
+app.use("/api/ai", airoutes);
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))

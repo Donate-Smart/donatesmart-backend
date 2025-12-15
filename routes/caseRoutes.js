@@ -4,7 +4,6 @@ import { verifyToken } from "../middleware/authMiddleware.js";
 import Case from "../models/Case.js";
 import upload from "../middleware/upload.js";
 const router = express.Router();
-
 router.post("/", verifyToken,upload.single("image"), addCase);
 router.get("/my-cases", verifyToken, getUserCases);
 router.get("/", getApprovedCases);

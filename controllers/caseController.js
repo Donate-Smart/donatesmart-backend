@@ -1,14 +1,14 @@
 
 import Case from "../models/Case.js";
-
+import { analyzeCase } from "../services/aiService.js";
 export const addCase = async (req, res) => {
   try {
-    const { title, description, category, summary , goal } = req.body;
+    const { title, description, category , goal } = req.body;
     console.log("Uploaded file:", req.file);
     
 
     const image = req.file ? req.file.filename : null;
-
+  const { summary, error } = await analyzeCase({ title, description });
     const newCase = new Case({
       title,
       description,
@@ -16,6 +16,8 @@ export const addCase = async (req, res) => {
       summary,
       image,
       goal,
+      status: "pending",
+      donations: 0,
       createdBy: req.user.id,
     });
 
@@ -26,6 +28,19 @@ export const addCase = async (req, res) => {
   }
 };
 
+export const analyzeCaseController = async (req, res) => {
+  try {
+    const { title, description } = req.body;
+    if ( !description) {
+      return res.status(400).json({ success: false, message: "Title and description required" });
+    }
+
+    const ai = await analyzeCase({ title, description });
+    return res.status(200).json({ success: true, data: ai });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+};
 export const getApprovedCases = async (req, res) => {
   try {
     const cases = await Case.find({ status: "approved" });
