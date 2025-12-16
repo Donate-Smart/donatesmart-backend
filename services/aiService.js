@@ -1,14 +1,10 @@
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
-console.log("Key for GenAI (Length):", (process.env.GEMINI_API_KEY || "").length);
-console.log("Key for GenAI (Starts With):", (process.env.GEMINI_API_KEY || "").substring(0, 10));
-// Check if the key is undefined or short
-if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY.length < 39) {
-    console.error("CRITICAL: GEMINI_API_KEY is missing or too short. Check .env and dotenv config.");
-}
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+console.log("Gemini API Key:", process.env.GEMINI_API_KEY);
 
 
 const CATEGORIES = [
