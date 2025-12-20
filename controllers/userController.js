@@ -62,3 +62,36 @@ export const updateUser = async (req, res) => {
     res.status(500).json(err.message);
   }
 };
+
+
+export async function disableUser(req, res) {
+  try {
+    const { id } = req.params;
+    const { disabled = true } = req.body; // true لتعطيل، false لإعادة التفعيل
+
+    const user = await User.findByIdAndUpdate(
+      id,
+      { disabled },
+      { new: true }
+    );
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    return res.json({ message: disabled ? "User disabled" : "User enabled", user });
+  } catch (err) {
+    return res.status(500).json({ message: "Server error", error: err.message });
+  }
+}
+
+export async function deleteUser(req, res) {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findByIdAndDelete(id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    return res.json({ message: "User deleted", id });
+  } catch (err) {
+    return res.status(500).json({ message: "Server error", error: err.message });
+  }
+}
