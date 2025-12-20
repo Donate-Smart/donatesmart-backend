@@ -33,6 +33,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/ai", airoutes);
+app.use("/api/admin/users", userRoutes);
 
 // Google Auth
 app.use(passport.initialize());
