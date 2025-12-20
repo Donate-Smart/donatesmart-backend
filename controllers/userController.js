@@ -19,10 +19,28 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    if (!user || !(await bcrypt.compare(password, user.password)))
+    if (!user) {
       return res.status(400).json("Invalid credentials");
+    }
 
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET);
+    // ✅ Check if user is disabled
+    if (user.isDisabled) {
+      return res.status(403).json("Account disabled. Contact admin.");
+    }
+
+    // ✅ Check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json("Invalid credentials");
+    }
+
+    // ✅ Generate token if everything is fine
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+     
+    );
+
     res.json({ token, user });
   } catch (err) {
     res.status(500).json(err.message);
@@ -64,24 +82,21 @@ export const updateUser = async (req, res) => {
 };
 
 
-export async function disableUser(req, res) {
+export const disableUser = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { disabled = true } = req.body; // true لتعطيل، false لإعادة التفعيل
-
     const user = await User.findByIdAndUpdate(
-      id,
-      { disabled },
+      req.params.id,
+      { isDisabled: req.body.disabled },
       { new: true }
     );
-
     if (!user) return res.status(404).json({ message: "User not found" });
-
-    return res.json({ message: disabled ? "User disabled" : "User enabled", user });
+    res.json({ message: "User status updated", user });
   } catch (err) {
-    return res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).json({ message: err.message });
   }
-}
+};
+
+
 
 export async function deleteUser(req, res) {
   try {
