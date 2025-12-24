@@ -27,7 +27,7 @@ export const checkout  = async (req, res) => {
         },
       ],
       success_url: `http://localhost:3000/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `http://localhost:3000/payment-cancelled`,
+      cancel_url: `http://localhost:3000/payment-cancelled?session_id={CHECKOUT_SESSION_ID}`,
       metadata: {
         caseId,
         caseTitle,
