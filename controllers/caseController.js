@@ -52,6 +52,7 @@ export const getApprovedCases = async (req, res) => {
     res.status(500).json(err.message);
   }
 };
+
 export const getUserCases = async (req, res) => {
   try {
     const cases = await Case.find({ createdBy: req.user.id });
