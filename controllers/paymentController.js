@@ -7,9 +7,9 @@ dotenv.config();
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-export const checkout  = async (req, res) => {
+export const checkout = async (req, res) => {
   try {
-    const { amount, caseId, userId ,caseTitle} = req.body;
+    const { amount, caseId, userId, caseTitle } = req.body;
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -43,7 +43,7 @@ export const checkout  = async (req, res) => {
   }
 }
 
-export const webhook = (req, res) => {
+export const webhook = async (req, res) => {
   const sig = req.headers["stripe-signature"];
   let event;
 
@@ -54,23 +54,27 @@ export const webhook = (req, res) => {
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
+    console.error(" Webhook signature error:", err.message);
     return res.status(400).send(`Webhook error: ${err.message}`);
   }
 
   if (event.type === "checkout.session.completed") {
-    const session = event.data.object;
+    console.log(" WEBHOOK TRIGGERED");
 
+    const session = event.data.object;
     const caseId = session.metadata.caseId;
     const amount = session.amount_total / 100;
 
-    // update case total donations
-    Case.findByIdAndUpdate(caseId, {
-      $inc: { collectedAmount: amount }
-    }).exec();
+    await Case.findByIdAndUpdate(caseId, {
+      $inc: { donations: amount },
+    });
+
+    console.log("Donation added:", amount);
   }
 
   res.json({ received: true });
-}
+};
+
 
 export const getSession = async (req, res) => {
 
